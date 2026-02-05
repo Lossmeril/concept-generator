@@ -1,26 +1,43 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Default: everything is muted */
+.reel-row {
+  opacity: 0.35;
+  filter: saturate(0.4);
+  transition:
+    opacity 300ms ease,
+    filter 300ms ease,
+    transform 300ms ease;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Motion blur during spin */
+.reel-blur .reel-row {
+  filter: blur(6px) saturate(0.3);
+  opacity: 0.25;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.reel-row {
+  opacity: 0.35;
+  filter: saturate(0.4);
+  transition:
+    opacity 300ms ease,
+    filter 300ms ease,
+    transform 300ms ease;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.reel-blur .reel-row {
+  filter: blur(6px) saturate(0.3);
+  opacity: 0.25;
+}
+
+/* Focus window overrides dimming */
+.focus-mask {
+  position: relative;
+}
+
+.focus-mask::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  backdrop-filter: saturate(1.4) contrast(1.1);
 }
