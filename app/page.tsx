@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { character, setting } from "@/data/prompts";
+import { prompts } from "@/data/prompts";
+import { useLanguage, useTranslations } from "@/app/language-context";
+import { LanguageSwitch } from "@/app/language-switch";
 
 function SlotMachine({
   items,
@@ -100,11 +102,11 @@ function SlotMachine({
   return (
     <div className="w-full">
       <div
-        className="relative mx-auto w-full overflow-hidden"
+        className="relative mx-auto w-full overflow-hidden rounded-full border border-white/15 bg-white/5 backdrop-blur"
         style={{ height: WINDOW_PX }}
       >
         {/* Vignette */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black via-transparent to-black opacity-90" />
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black via-transparent to-black opacity-90" />
 
         {/* Dim top + bottom, highlight center row */}
         <div className="pointer-events-none absolute inset-0 z-10">
@@ -167,6 +169,9 @@ function SlotMachine({
 export default function HomePage() {
   const [spinning, setSpinning] = useState(false);
   const [spinKey, setSpinKey] = useState(0);
+  const { locale } = useLanguage();
+  const t = useTranslations();
+  const { character, setting } = prompts[locale];
 
   const onGenerate = () => {
     setSpinKey((k) => k + 1);
@@ -176,26 +181,29 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-black px-6 py-16 text-white">
+      <LanguageSwitch />
       <div className="mx-auto w-full md:px-[5%]">
         <h1 className="text-center text-3xl font-semibold tracking-tight">
-          Your concept for concept art is
+          {t.title}
         </h1>
 
         <div className="mt-10 grid grid-cols-1 items-center gap-6 md:grid-cols-3">
           <SlotMachine
+            key={`character-${locale}`}
             items={character}
-            placeholder="Character"
+            placeholder={t.characterPlaceholder}
             running={spinning}
             settleSignal={spinKey}
           />
 
           <div className="text-center text-base text-white/70">
-            imagined as a
+            {t.connector}
           </div>
 
           <SlotMachine
+            key={`setting-${locale}`}
             items={setting}
-            placeholder="Setting"
+            placeholder={t.settingPlaceholder}
             running={spinning}
             settleSignal={spinKey}
           />
@@ -207,7 +215,7 @@ export default function HomePage() {
             disabled={spinning}
             className="rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black shadow-sm transition active:scale-[0.99] disabled:opacity-40"
           >
-            {spinning ? "Generating..." : "Generate concept"}
+            {spinning ? t.generating : t.generate}
           </button>
         </div>
       </div>
