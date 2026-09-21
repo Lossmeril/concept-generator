@@ -21,9 +21,9 @@ function SlotMachine({
   const len = items.length;
 
   const ROW_PX = 32; // Tailwind h-8
-  const VISIBLE_ROWS = 3;
+  const VISIBLE_ROWS = 1;
   const WINDOW_PX = ROW_PX * VISIBLE_ROWS;
-  const centerRowIndex = 1; // middle of 3 rows
+  const centerRowIndex = 0; // the only visible row
 
   const reelRef = useRef<HTMLDivElement | null>(null);
 
@@ -105,19 +105,6 @@ function SlotMachine({
         className="relative mx-auto w-full overflow-hidden rounded-full border border-white/15 bg-white/5 backdrop-blur"
         style={{ height: WINDOW_PX }}
       >
-        {/* Vignette */}
-        <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black via-transparent to-black opacity-90" />
-
-        {/* Dim top + bottom, highlight center row */}
-        <div className="pointer-events-none absolute inset-0 z-10">
-          <div style={{ height: ROW_PX }} className="bg-black/65" />
-          <div
-            style={{ height: ROW_PX }}
-            className="bg-white/5 shadow-[inset_0_0_24px_rgba(255,255,255,0.14)]"
-          />
-          <div style={{ height: ROW_PX }} className="bg-black/65" />
-        </div>
-
         <div className="absolute inset-0 flex items-start justify-center">
           {/* ✅ Only render the reel after the first spin */}
           {hasSpun && (
@@ -140,8 +127,7 @@ function SlotMachine({
           {/* Placeholder (only before first roll) */}
           {showPlaceholder && (
             <div
-              className="absolute left-0 right-0 mx-auto z-20 flex items-center justify-center text-xl font-semibold tracking-wide text-white/80"
-              style={{ top: ROW_PX, height: ROW_PX }}
+              className="absolute inset-0 z-20 flex items-center justify-center text-xl font-semibold tracking-wide text-white/80"
             >
               {placeholder}
             </div>
@@ -151,14 +137,14 @@ function SlotMachine({
 
       <style jsx>{`
         .reel-row {
-          opacity: 0.35;
-          filter: saturate(0.55);
+          opacity: 1;
+          filter: saturate(1);
           transition:
             opacity 200ms ease,
             filter 200ms ease;
         }
         .reel-blur .reel-row {
-          opacity: 0.22;
+          opacity: 0.5;
           filter: blur(6px) saturate(0.35);
         }
       `}</style>
